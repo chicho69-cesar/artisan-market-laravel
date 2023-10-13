@@ -71,4 +71,8 @@ class User extends Authenticatable {
   public function messages_received(): HasMany {
     return $this->hasMany(Message::class);
   }
+
+  public function products(): HasMany {
+    return $this->hasMany(Product::class);
+  }
 }
