@@ -63,4 +63,12 @@ class User extends Authenticatable {
   public function followings(): HasMany {
     return $this->hasMany(Follower::class);
   }
+
+  public function messages_send(): HasMany {
+    return $this->hasMany(Message::class);
+  }
+
+  public function messages_received(): HasMany {
+    return $this->hasMany(Message::class);
+  }
 }
