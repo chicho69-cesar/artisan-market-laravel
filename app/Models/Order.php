@@ -7,31 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Product extends Model {
+class Order extends Model {
   use HasFactory;
 
   protected $fillable = [
-    'name',
-    'description',
-    'price',
-    'stock',
-    'seller_id',
+    'user_id',
+    'date',
+    'address_id',
+    'status',
+    'subtotal',
+    'tax',
+    'total',
   ];
 
-  public function seller(): BelongsTo {
+  public function user(): BelongsTo {
     return $this->belongsTo(User::class);
   }
 
-  public function images(): HasMany {
-    return $this->hasMany(Image::class);
-  }
-
-  public function product_categories(): HasMany {
-    return $this->hasMany(ProductCategory::class);
-  }
-
-  public function reviews(): HasMany {
-    return $this->hasMany(Review::class);
+  public function address(): BelongsTo {
+    return $this->belongsTo(Address::class);
   }
 
   public function order_products(): HasMany {
