@@ -13,7 +13,7 @@ return new class extends Migration {
       $table->id();
       $table->string('street');
       $table->string('no_out');
-      $table->string('no_in');
+      $table->string('no_in')->nullable();
       $table->string('zip_code');
       $table->string('city');
       $table->string('state');

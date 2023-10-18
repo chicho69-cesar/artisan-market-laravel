@@ -14,7 +14,7 @@ return new class extends Migration {
       $table->string('name');
       $table->text('description');
       $table->decimal('price');
-      $table->integer('stock');
+      $table->integer('stock')->default(0);
       $table->unsignedBigInteger('seller_id')->nullable();
       $table->foreign('seller_id')->references('id')->on('users');
       $table->timestamps();

@@ -16,7 +16,7 @@ return new class extends Migration {
       $table->dateTime('date');
       $table->unsignedBigInteger('address_id')->nullable();
       $table->foreign('address_id')->references('id')->on('addresses');
-      $table->string('status');
+      $table->string('status')->default('pending');
       $table->decimal('subtotal');
       $table->decimal('tax');
       $table->decimal('total');
