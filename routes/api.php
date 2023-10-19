@@ -15,5 +15,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/* USERS */
 Route::post('users/sign-up', [UsersController::class, 'register']);
 Route::post('users/sign-in', [UsersController::class, 'login']);
+Route::post('users/sign-out', [UsersController::class, 'logout']);
+Route::put(
+  'users/edit',
+  [UsersController::class, 'edit_profile']
+)->middleware('auth:api');
+// TODO: user follows
+// TODO: user messages
+
+/* PRODUCTS */
+// TODO: CRUD of products
+// TODO: product categories
+// TODO: product images
+
+/* ORDERS */
+// TODO: CRUD of orders
+// TODO: secondary operations of orders
+
+/* ADDRESSES */
+// TODO: CRUD of addresses
+
+/* SOCIALS */
+// TODO: CRUD of socials
+
+/* REVIEWS */
+// TODO: CRUD of reviews

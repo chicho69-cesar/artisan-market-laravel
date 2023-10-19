@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\Social;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -70,5 +71,34 @@ class UsersController extends ResponseController {
     } else {
       return $this->send_error('Unauthorised.', ['error' => 'Unauthorised']);
     }
+  }
+
+  public function logout(Request $request): JsonResponse {
+    $request->user()->token()->revoke();
+    return $this->send_response([], 'User logout successfully.');
+  }
+
+  public function edit_profile(Request $request) {
+    $body = $request->all();
+
+    $validator = Validator::make($body, [
+      'name' => 'required|string|max:255',
+      'lastname' => 'required|string|max:255',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->send_error('Validation Error', $validator->errors());
+    }
+
+    $user = $request->user();
+    $user_to_edit = User::find($user->id);
+
+    $user_to_edit->name = $body['name'];
+    $user_to_edit->lastname = $body['lastname'];
+    $user_to_edit->picture = $body['picture'];
+    $user_to_edit->biography = $body['biography'];
+    $user_to_edit->save();
+
+    return $this->send_response($user_to_edit, 'User edited successfully.');
   }
 }
