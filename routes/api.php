@@ -18,12 +18,22 @@ use Illuminate\Support\Facades\Route;
 /* USERS */
 Route::post('users/sign-up', [UsersController::class, 'register']);
 Route::post('users/sign-in', [UsersController::class, 'login']);
-Route::post('users/sign-out', [UsersController::class, 'logout']);
+Route::post(
+  'users/sign-out',
+  [UsersController::class, 'logout']
+)->middleware('auth:api');
 Route::put(
   'users/edit',
   [UsersController::class, 'edit_profile']
 )->middleware('auth:api');
-// TODO: user follows
+Route::patch(
+  'users/follow-user',
+  [UsersController::class, 'follow_user']
+)->middleware('auth:api');
+Route::patch(
+  'users/unfollow-user',
+  [UsersController::class, 'unfollow_user']
+)->middleware('auth:api');
 // TODO: user messages
 
 /* PRODUCTS */

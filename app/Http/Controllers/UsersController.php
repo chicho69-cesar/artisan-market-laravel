@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Follower;
 use App\Models\Role;
-use App\Models\Social;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -78,7 +78,7 @@ class UsersController extends ResponseController {
     return $this->send_response([], 'User logout successfully.');
   }
 
-  public function edit_profile(Request $request) {
+  public function edit_profile(Request $request): JsonResponse {
     $body = $request->all();
 
     $validator = Validator::make($body, [
@@ -100,5 +100,47 @@ class UsersController extends ResponseController {
     $user_to_edit->save();
 
     return $this->send_response($user_to_edit, 'User edited successfully.');
+  }
+
+  public function follow_user(Request $request): JsonResponse {
+    $body = $request->all();
+    $user = $request->user();
+
+    $user_to_follow = User::find($body['user_follow']);
+
+    if (!$user_to_follow) {
+      return $this->send_error('User to follow not found.', ['error' => 'User to follow not found.']);
+    }
+
+    $follow = Follower::create([
+      'follower_id' => $user->id,
+      'following_id' => $user_to_follow->id,
+    ]);
+    $follow->save();
+
+    return $this->send_response($follow, 'User followed successfully.');
+  }
+
+  public function unfollow_user(Request $request): JsonResponse {
+    $body = $request->all();
+    $user = $request->user();
+
+    $user_following = User::find($body['user_follow']);
+
+    if (!$user_following) {
+      return $this->send_error('User following not found.', ['error' => 'User following not found.']);
+    }
+
+    $follow = Follower::where('follower_id', $user->id)
+      ->where('following_id', $user_following->id)
+      ->first();
+
+    if (!$follow) {
+      return $this->send_error('You are not following this user.', ['error' => 'You are not following this user.']);
+    }
+
+    $follow->delete();
+
+    return $this->send_response($follow, 'User unfollowed successfully.');
   }
 }

@@ -12,6 +12,7 @@ class UserSocial extends Model {
   protected $fillable = [
     'user_id',
     'social_id',
+    'link',
   ];
 
   public function user(): BelongsTo {
