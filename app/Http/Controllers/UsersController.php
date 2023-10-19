@@ -143,4 +143,20 @@ class UsersController extends ResponseController {
 
     return $this->send_response($follow, 'User unfollowed successfully.');
   }
+
+  public function get_followers(Request $request): JsonResponse {
+    $user = $request->user();
+    $followers = Follower::where('following_id', $user->id)->pluck('follower_id');
+    $followerUsers = User::whereIn('id', $followers)->get();
+
+    return $this->send_response($followerUsers, 'Here are your followers');
+  }
+
+  public function get_followings(Request $request): JsonResponse {
+    $user = $request->user();
+    $followers = Follower::where('follower_id', $user->id)->pluck('following_id');
+    $followerUsers = User::whereIn('id', $followers)->get();
+
+    return $this->send_response($followerUsers, 'Here are your followings');
+  }
 }

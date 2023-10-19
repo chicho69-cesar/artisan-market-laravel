@@ -34,6 +34,14 @@ Route::patch(
   'users/unfollow-user',
   [UsersController::class, 'unfollow_user']
 )->middleware('auth:api');
+Route::get(
+  'users/followers',
+  [UsersController::class, 'get_followers']
+)->middleware('auth:api');
+Route::get(
+  'users/followings',
+  [UsersController::class, 'get_followings']
+)->middleware('auth:api');
 // TODO: user messages
 
 /* PRODUCTS */
