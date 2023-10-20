@@ -57,7 +57,7 @@ Route::get(
 // TODO: CRUD of addresses
 
 /* SOCIALS */
-// TODO: CRUD of socials
+// TODO: CRUD of socials and user socials
 
 /* REVIEWS */
 // TODO: CRUD of reviews
