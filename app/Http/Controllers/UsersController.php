@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Follower;
+use App\Models\Message;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -179,5 +180,40 @@ class UsersController extends ResponseController {
     $followerUsers = User::whereIn('id', $followers)->get();
 
     return $this->send_response($followerUsers, 'Here are your followings');
+  }
+
+  public function send_message(Request $request): JsonResponse {
+    $body = $request->all();
+    $user = $request->user();
+
+    $user_to_send_message = User::find($body['user_to_send_message']);
+
+    if (!$user_to_send_message) {
+      return $this->send_error('User to send message not found.', ['error' => 'User to send message not found.']);
+    }
+
+    $message = Message::create([
+      'user_send_id' => $user->id,
+      'user_receive_id' => $user_to_send_message->id,
+      'message' => $body['message'],
+      'date' => date('Y-m-d H:i:s'),
+    ]);
+    $message->save();
+
+    return $this->send_response($message, 'Message sent successfully.');
+  }
+
+  public function get_conversation_messages(Request $request, string $user_conversation): JsonResponse {
+    $user = $request->user();
+
+    $send = Message::where('user_send_id', $user->id)->where('user_receive_id', $user_conversation)->get();
+    $receive = Message::where('user_send_id', $user_conversation)->where('user_receive_id', $user->id)->get();
+
+    $conversation = [
+      'send' => $send,
+      'receive' => $receive,
+    ];
+
+    return $this->send_response($conversation, 'Here are your conversation messages');
   }
 }

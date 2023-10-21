@@ -48,6 +48,14 @@ Route::post(
 )->middleware('auth:api');
 // NOTE: See if we could do a recover password endpoint
 // TODO: user messages
+Route::post(
+  'users/send-message',
+  [UsersController::class, 'send_message']
+)->middleware('auth:api');
+Route::get(
+  'users/conversation/{user_conversation}',
+  [UsersController::class, 'get_conversation_messages']
+)->middleware('auth:api');
 
 /* PRODUCTS */
 // TODO: CRUD of products
