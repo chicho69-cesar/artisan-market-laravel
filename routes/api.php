@@ -65,12 +65,14 @@ Route::post(
   'products/add-product',
   [ProductsController::class, 'create']
 )->middleware('auth:api');
+Route::get('products/get-product/{id}', [ProductsController::class, 'get_product']);
+Route::get('products/get-products', [ProductsController::class, 'get_products']);
 Route::post(
-  'products/upload-image/{id}',
+  'products/upload-image/{id}', // id of the product
   [ProductsController::class, 'upload_image']
 )->middleware('auth:api');
 Route::delete(
-  'products/delete-image/{id}',
+  'products/delete-image/{id}', // id of the image
   [ProductsController::class, 'delete_image']
 )->middleware('auth:api');
 

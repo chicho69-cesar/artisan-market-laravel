@@ -62,9 +62,29 @@ class ProductsController extends ResponseController {
     );
   }
 
-  // get a product
+  public function get_product(Request $request, string $id): JsonResponse {
+    $product = Product::find($id);
 
-  // get a list of products with pagination
+    if (!$product) {
+      return $this->send_error('Product not found.', ['error' => 'Product not found.']);
+    }
+
+    $product->load('seller');
+    $product->load('images');
+    $product->load('categories');
+
+    return $this->send_response($product, 'Product retrieved successfully.');
+  }
+
+  public function get_products(Request $request): JsonResponse {
+    $products = Product::paginate(10);
+
+    $products->load('seller');
+    $products->load('images');
+    $products->load('categories');
+
+    return $this->send_response($products, 'Products retrieved successfully.');
+  }
 
   // search products
 
