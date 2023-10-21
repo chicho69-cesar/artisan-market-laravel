@@ -67,6 +67,7 @@ Route::post(
 )->middleware('auth:api');
 Route::get('products/get-product/{id}', [ProductsController::class, 'get_product']);
 Route::get('products/get-products', [ProductsController::class, 'get_products']);
+Route::get('products/search-products', [ProductsController::class, 'search_products']);
 Route::post(
   'products/upload-image/{id}', // id of the product
   [ProductsController::class, 'upload_image']

@@ -86,7 +86,17 @@ class ProductsController extends ResponseController {
     return $this->send_response($products, 'Products retrieved successfully.');
   }
 
-  // search products
+  public function search_products(Request $request): JsonResponse {
+    $products = Product::where('name', 'like', '%' . $request->query('q') . '%')
+      ->orWhere('description', 'like', '%' . $request->query('q') . '%')
+      ->paginate(20);
+
+    $products->load('seller');
+    $products->load('images');
+    $products->load('categories');
+
+    return $this->send_response($products, 'Products retrieved successfully.');
+  }
 
   // get products of a seller
 
