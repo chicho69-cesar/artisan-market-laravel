@@ -48,18 +48,11 @@ class ProductsController extends ResponseController {
       $productCategory->save();
     }
 
-    return $this->send_response(
-      [
-        'name' => $product->name,
-        'description' => $product->description,
-        'price' => $product->price,
-        'stock' => $product->stock,
-        'categories' => $body['categories'],
-        'seller' => $user,
-      ],
-      'Product created successfully.',
-      201
-    );
+    $product->load('seller');
+    $product->load('images');
+    $product->load('categories');
+
+    return $this->send_response($product, 'Product created successfully.', 201);
   }
 
   public function get_product(Request $request, string $id): JsonResponse {
@@ -109,9 +102,64 @@ class ProductsController extends ResponseController {
     return $this->send_response($products, 'Products retrieved successfully.');
   }
 
-  // update product
+  public function update_product(Request $request, string $id): JsonResponse {
+    $body = $request->all();
+    $user = $request->user();
 
-  // delete product
+    $product_to_edit = Product::find($id);
+
+    if (!$product_to_edit) {
+      return $this->send_error('Product not found.', ['error' => 'Product not found.']);
+    }
+
+    if ($product_to_edit->seller_id != $user->id) {
+      return $this->send_error('Unauthorized.', ['error' => 'Unauthorized.']);
+    }
+
+    $validator = Validator::make($body, [
+      'name' => 'required|string|max:255',
+      'description' => 'required|string',
+      'price' => 'required|numeric|gte:0',
+      'stock' => 'required|numeric|gte:0',
+      'categories' => 'required|array',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->send_error('Validation Error', $validator->errors());
+    }
+
+    $product_to_edit->name = $body['name'];
+    $product_to_edit->description = $body['description'];
+    $product_to_edit->price = $body['price'];
+    $product_to_edit->stock = $body['stock'];
+
+    $product_categories = ProductCategory::where('product_id', $id)->get();
+
+    foreach ($product_categories as $category) {
+      $category->delete();
+    }
+
+    foreach ($body['categories'] as $category) {
+      $category = Category::firstOrNew(['name' => $category]);
+      $category->save();
+
+      $productCategory = ProductCategory::create([
+        'product_id' => $id,
+        'category_id' => $category->id,
+      ]);
+      $productCategory->save();
+    }
+
+    $product_to_edit->save();
+
+    $product_to_edit->load('seller');
+    $product_to_edit->load('images');
+    $product_to_edit->load('categories');
+
+    return $this->send_response($product_to_edit, 'Product updated successfully.');
+  }
+
+  // delete a product
 
   public function upload_image(Request $request, string $id): JsonResponse {
     if ($request->hasFile('image')) {
