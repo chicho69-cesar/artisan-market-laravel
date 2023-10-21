@@ -75,7 +75,6 @@ Route::post(
   'socials/add-social',
   [SocialsController::class, 'store']
 )->middleware('auth:api');
-// TODO: CRUD of socials and user socials
 
 /* REVIEWS */
 // TODO: CRUD of reviews

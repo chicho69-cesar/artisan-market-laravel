@@ -116,7 +116,6 @@ class UsersController extends ResponseController {
 
     $user_to_edit->name = $body['name'];
     $user_to_edit->lastname = $body['lastname'];
-    $user_to_edit->picture = $body['picture'];
     $user_to_edit->biography = $body['biography'];
     $user_to_edit->save();
 
