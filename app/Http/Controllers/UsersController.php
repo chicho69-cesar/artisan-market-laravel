@@ -80,6 +80,25 @@ class UsersController extends ResponseController {
     return $this->send_response([], 'User logout successfully.');
   }
 
+  public function get_user_info_by_id(Request $request, string $id): JsonResponse {
+    $user = User::find($id);
+
+    if (!$user) {
+      return $this->send_error('User not found.', ['error' => 'User not found.']);
+    }
+
+    return $this->send_response(
+      [
+        'id' => $user->id,
+        'name' => $user->name,
+        'lastname' => $user->lastname,
+        'picture' => $user->picture,
+        'email' => $user->email,
+      ],
+      'User info retrieved successfully.'
+    );
+  }
+
   public function edit_profile(Request $request): JsonResponse {
     $body = $request->all();
 

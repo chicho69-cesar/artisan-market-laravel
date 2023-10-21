@@ -22,6 +22,7 @@ Route::post(
   'users/sign-out',
   [UsersController::class, 'logout']
 )->middleware('auth:api');
+Route::get('users/user-info/{id}', [UsersController::class, 'get_user_info_by_id']);
 Route::put(
   'users/edit',
   [UsersController::class, 'edit_profile']
@@ -47,7 +48,6 @@ Route::post(
   [UsersController::class, 'upload_profile_picture']
 )->middleware('auth:api');
 // NOTE: See if we could do a recover password endpoint
-// TODO: user messages
 Route::post(
   'users/send-message',
   [UsersController::class, 'send_message']
