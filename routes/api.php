@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +71,10 @@ Route::get(
 // TODO: CRUD of addresses
 
 /* SOCIALS */
+Route::post(
+  'socials/add-social',
+  [SocialsController::class, 'store']
+)->middleware('auth:api');
 // TODO: CRUD of socials and user socials
 
 /* REVIEWS */

@@ -9,12 +9,12 @@ return new class extends Migration {
    * Run the migrations.
    */
   public function up(): void {
-    Schema::create('user_social', function (Blueprint $table) {
+    Schema::create('user_socials', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('user_id')->nullable();
       $table->foreign('user_id')->references('id')->on('users');
       $table->unsignedBigInteger('social_id')->nullable();
-      $table->foreign('social_id')->references('id')->on('social');
+      $table->foreign('social_id')->references('id')->on('socials');
       $table->string('link');
       $table->timestamps();
     });
@@ -24,6 +24,6 @@ return new class extends Migration {
    * Reverse the migrations.
    */
   public function down(): void {
-    Schema::dropIfExists('user_social');
+    Schema::dropIfExists('user_socials');
   }
 };
