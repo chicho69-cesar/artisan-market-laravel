@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -60,6 +61,10 @@ Route::get(
 
 /* PRODUCTS */
 // TODO: CRUD of products
+Route::post(
+  'products/add-product',
+  [ProductsController::class, 'create']
+)->middleware('auth:api');
 // TODO: product categories
 // TODO: product images
 
