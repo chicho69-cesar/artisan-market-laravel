@@ -98,7 +98,16 @@ class ProductsController extends ResponseController {
     return $this->send_response($products, 'Products retrieved successfully.');
   }
 
-  // get products of a seller
+  public function get_seller_products(Request $request): JsonResponse {
+    $user = $request->user();
+    $products = Product::where('seller_id', $user->id)->paginate(20);
+
+    $products->load('seller');
+    $products->load('images');
+    $products->load('categories');
+
+    return $this->send_response($products, 'Products retrieved successfully.');
+  }
 
   // update product
 
