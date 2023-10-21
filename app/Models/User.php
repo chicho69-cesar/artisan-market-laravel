@@ -56,6 +56,10 @@ class User extends Authenticatable {
     return $this->hasMany(UserSocial::class);
   }
 
+  public function socials() {
+    return $this->hasManyThrough(Social::class, UserSocial::class, 'user_id', 'id', 'id', 'social_id');
+  }
+
   public function followers(): HasMany {
     return $this->hasMany(Follower::class);
   }

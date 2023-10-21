@@ -26,8 +26,8 @@ class Product extends Model {
     return $this->hasMany(Image::class);
   }
 
-  public function product_categories(): HasMany {
-    return $this->hasMany(ProductCategory::class);
+  public function categories() {
+    return $this->hasManyThrough(Category::class, ProductCategory::class, 'product_id', 'id', 'id', 'category_id');
   }
 
   public function reviews(): HasMany {
