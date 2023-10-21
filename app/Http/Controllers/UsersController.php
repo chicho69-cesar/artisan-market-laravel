@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -100,6 +101,26 @@ class UsersController extends ResponseController {
     $user_to_edit->save();
 
     return $this->send_response($user_to_edit, 'User edited successfully.');
+  }
+
+  public function upload_profile_picture(Request $request): JsonResponse {
+    $user = $request->user();
+
+    if ($request->hasFile('picture')) {
+      if ($user->picture) {
+        Storage::disk('public')->delete($user->picture);
+      }
+
+      $file = $request->file('picture');
+      $path = $file->store('profile_pictures', 'public');
+
+      $user->picture = $path;
+      $user->save();
+
+      return $this->send_response(['picture' => $user->picture], 'Profile picture uploaded successfully.');
+    }
+
+    return $this->send_error('No file uploaded.', ['error' => 'No file uploaded.']);
   }
 
   public function follow_user(Request $request): JsonResponse {

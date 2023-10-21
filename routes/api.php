@@ -42,6 +42,11 @@ Route::get(
   'users/followings',
   [UsersController::class, 'get_followings']
 )->middleware('auth:api');
+Route::post(
+  'users/upload-profile-picture',
+  [UsersController::class, 'upload_profile_picture']
+)->middleware('auth:api');
+// NOTE: See if we could do a recover password endpoint
 // TODO: user messages
 
 /* PRODUCTS */
@@ -61,3 +66,6 @@ Route::get(
 
 /* REVIEWS */
 // TODO: CRUD of reviews
+
+/* DASHBOARD */
+// TODO: An endpoint for get the information for the dashboard
