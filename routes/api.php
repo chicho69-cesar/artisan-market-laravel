@@ -76,6 +76,10 @@ Route::put(
   'products/update-product/{id}',
   [ProductsController::class, 'update_product']
 )->middleware('auth:api');
+Route::delete(
+  'products/delete-product/{id}',
+  [ProductsController::class, 'delete_product']
+)->middleware('auth:api');
 Route::post(
   'products/upload-image/{id}', // id of the product
   [ProductsController::class, 'upload_image']

@@ -159,7 +159,28 @@ class ProductsController extends ResponseController {
     return $this->send_response($product_to_edit, 'Product updated successfully.');
   }
 
-  // delete a product
+  public function delete_product(Request $request, string $id): JsonResponse {
+    $user = $request->user();
+    $product = Product::find($id);
+
+    if (!$product) {
+      return $this->send_error('Product not found.', ['error' => 'Product not found.']);
+    }
+
+    if ($product->seller_id != $user->id) {
+      return $this->send_error('Unauthorized.', ['error' => 'Unauthorized.']);
+    }
+
+    $product_categories = ProductCategory::where('product_id', $id)->get();
+
+    foreach ($product_categories as $category) {
+      $category->delete();
+    }
+
+    $product->delete();
+
+    return $this->send_response([], 'Product deleted successfully.');
+  }
 
   public function upload_image(Request $request, string $id): JsonResponse {
     if ($request->hasFile('image')) {
