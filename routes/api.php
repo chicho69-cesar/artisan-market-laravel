@@ -65,8 +65,14 @@ Route::post(
   'products/add-product',
   [ProductsController::class, 'create']
 )->middleware('auth:api');
-// TODO: product categories
-// TODO: product images
+Route::post(
+  'products/upload-image/{id}',
+  [ProductsController::class, 'upload_image']
+)->middleware('auth:api');
+Route::delete(
+  'products/delete-image/{id}',
+  [ProductsController::class, 'delete_image']
+)->middleware('auth:api');
 
 /* ORDERS */
 // TODO: CRUD of orders

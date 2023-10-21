@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductsController extends ResponseController {
-  // create product
   public function create(Request $request): JsonResponse {
     $body = $request->all();
     $user = $request->user();
@@ -72,4 +73,34 @@ class ProductsController extends ResponseController {
   // update product
 
   // delete product
+
+  public function upload_image(Request $request, string $id): JsonResponse {
+    if ($request->hasFile('image')) {
+      $file = $request->file('image');
+      $path = $file->store('product_images', 'public');
+
+      $productImage = Image::create([
+        'link' => $path,
+        'product_id' => $id,
+      ]);
+      $productImage->save();
+
+      return $this->send_response(['image' => $productImage->link], 'Product image uploaded successfully.');
+    }
+
+    return $this->send_error('No file uploaded.', ['error' => 'No file uploaded.']);
+  }
+
+  public function delete_image(string $id): JsonResponse {
+    $image = Image::find($id);
+
+    if (!$image) {
+      return $this->send_error('Image not found.', ['error' => 'Image not found.']);
+    }
+
+    Storage::disk('public')->delete($image->link);
+    $image->delete();
+
+    return $this->send_response([], 'Image deleted successfully.');
+  }
 }
