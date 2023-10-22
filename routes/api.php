@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
@@ -60,7 +61,6 @@ Route::get(
 )->middleware('auth:api');
 
 /* PRODUCTS */
-// TODO: CRUD of products
 Route::post(
   'products/add-product',
   [ProductsController::class, 'create']
@@ -104,6 +104,11 @@ Route::post(
 
 /* REVIEWS */
 // TODO: CRUD of reviews
+Route::post(
+  'reviews/add-review/{product_id}',
+  [ReviewsController::class, 'create_review']
+)->middleware('auth:api');
+Route::get('reviews/get-review/{id}', [ReviewsController::class, 'get_review']);
 
 /* DASHBOARD */
 // TODO: An endpoint for get the information for the dashboard
