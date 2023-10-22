@@ -93,10 +93,10 @@ Route::delete(
 
 /* ORDERS */
 // TODO: CRUD of orders
-/* Route::post(
+Route::post(
   'orders/create-order',
   [OrdersController::class, 'create_order']
-)->middleware('auth:api'); */
+)->middleware('auth:api');
 // TODO: secondary operations of orders
 
 /* ADDRESSES */
