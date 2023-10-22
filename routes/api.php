@@ -103,12 +103,20 @@ Route::post(
 )->middleware('auth:api');
 
 /* REVIEWS */
-// TODO: CRUD of reviews
 Route::post(
   'reviews/add-review/{product_id}',
   [ReviewsController::class, 'create_review']
 )->middleware('auth:api');
 Route::get('reviews/get-review/{id}', [ReviewsController::class, 'get_review']);
+Route::get('reviews/get-reviews/{product_id}', [ReviewsController::class, 'get_reviews']);
+Route::put(
+  'reviews/update-review/{id}',
+  [ReviewsController::class, 'update_review']
+)->middleware('auth:api');
+Route::delete(
+  'reviews/delete-review/{id}',
+  [ReviewsController::class, 'delete_review']
+)->middleware('auth:api');
 
 /* DASHBOARD */
 // TODO: An endpoint for get the information for the dashboard

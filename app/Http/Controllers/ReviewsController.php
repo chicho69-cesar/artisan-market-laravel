@@ -44,9 +44,59 @@ class ReviewsController extends ResponseController {
     return $this->send_response($review, 'Review found successfully.');
   }
 
-  // get all reviews of a product
+  public function get_reviews(Request $request, string $product_id): JsonResponse {
+    $reviews = Review::where('product_id', $product_id)->get();
+    $reviews->load('user');
 
-  // update a review
+    return $this->send_response($reviews, 'Reviews found successfully.');
+  }
 
-  // delete a review
+  public function update_review(Request $request, string $id): JsonResponse {
+    $body = $request->all();
+    $user = $request->user();
+
+    $review = Review::find($id);
+
+    if (!$review) {
+      return $this->send_error('Review not found');
+    }
+
+    if ($review->user_id != $user->id) {
+      return $this->send_error('You are not authorized to update this review.');
+    }
+
+    $validator = Validator::make($body, [
+      'rate' => 'required|numeric|min:0|max:5',
+      'comment' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+      return $this->send_error('Validation Error', $validator->errors());
+    }
+
+    $review->rate = $body['rate'];
+    $review->comment = $body['comment'];
+    $review->save();
+
+    $review->load('user');
+
+    return $this->send_response($review, 'Review updated successfully.');
+  }
+
+  public function delete_review(Request $request, string $id): JsonResponse {
+    $user = $request->user();
+    $review = Review::find($id);
+
+    if (!$review) {
+      return $this->send_error('Review not found');
+    }
+
+    if ($review->user_id != $user->id) {
+      return $this->send_error('You are not authorized to delete this review.');
+    }
+
+    $review->delete();
+
+    return $this->send_response([], 'Review deleted successfully.');
+  }
 }
