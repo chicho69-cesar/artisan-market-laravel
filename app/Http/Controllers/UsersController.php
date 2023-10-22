@@ -187,17 +187,17 @@ class UsersController extends ResponseController {
   public function get_followers(Request $request): JsonResponse {
     $user = $request->user();
     $followers = Follower::where('following_id', $user->id)->pluck('follower_id');
-    $followerUsers = User::whereIn('id', $followers)->get();
+    $follower_users = User::whereIn('id', $followers)->get();
 
-    return $this->send_response($followerUsers, 'Here are your followers');
+    return $this->send_response($follower_users, 'Here are your followers');
   }
 
   public function get_followings(Request $request): JsonResponse {
     $user = $request->user();
-    $followers = Follower::where('follower_id', $user->id)->pluck('following_id');
-    $followerUsers = User::whereIn('id', $followers)->get();
+    $followings = Follower::where('follower_id', $user->id)->pluck('following_id');
+    $following_users = User::whereIn('id', $followings)->get();
 
-    return $this->send_response($followerUsers, 'Here are your followings');
+    return $this->send_response($following_users, 'Here are your followings');
   }
 
   public function send_message(Request $request): JsonResponse {

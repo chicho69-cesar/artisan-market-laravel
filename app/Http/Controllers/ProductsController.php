@@ -106,13 +106,13 @@ class ProductsController extends ResponseController {
     $body = $request->all();
     $user = $request->user();
 
-    $product_to_edit = Product::find($id);
+    $product_to_update = Product::find($id);
 
-    if (!$product_to_edit) {
+    if (!$product_to_update) {
       return $this->send_error('Product not found.', ['error' => 'Product not found.']);
     }
 
-    if ($product_to_edit->seller_id != $user->id) {
+    if ($product_to_update->seller_id != $user->id) {
       return $this->send_error('Unauthorized.', ['error' => 'Unauthorized.']);
     }
 
@@ -128,10 +128,10 @@ class ProductsController extends ResponseController {
       return $this->send_error('Validation Error', $validator->errors());
     }
 
-    $product_to_edit->name = $body['name'];
-    $product_to_edit->description = $body['description'];
-    $product_to_edit->price = $body['price'];
-    $product_to_edit->stock = $body['stock'];
+    $product_to_update->name = $body['name'];
+    $product_to_update->description = $body['description'];
+    $product_to_update->price = $body['price'];
+    $product_to_update->stock = $body['stock'];
 
     $product_categories = ProductCategory::where('product_id', $id)->get();
 
@@ -150,24 +150,24 @@ class ProductsController extends ResponseController {
       $productCategory->save();
     }
 
-    $product_to_edit->save();
+    $product_to_update->save();
 
-    $product_to_edit->load('seller');
-    $product_to_edit->load('images');
-    $product_to_edit->load('categories');
+    $product_to_update->load('seller');
+    $product_to_update->load('images');
+    $product_to_update->load('categories');
 
-    return $this->send_response($product_to_edit, 'Product updated successfully.');
+    return $this->send_response($product_to_update, 'Product updated successfully.');
   }
 
   public function delete_product(Request $request, string $id): JsonResponse {
     $user = $request->user();
-    $product = Product::find($id);
+    $product_to_delete = Product::find($id);
 
-    if (!$product) {
+    if (!$product_to_delete) {
       return $this->send_error('Product not found.', ['error' => 'Product not found.']);
     }
 
-    if ($product->seller_id != $user->id) {
+    if ($product_to_delete->seller_id != $user->id) {
       return $this->send_error('Unauthorized.', ['error' => 'Unauthorized.']);
     }
 
@@ -177,7 +177,7 @@ class ProductsController extends ResponseController {
       $category->delete();
     }
 
-    $product->delete();
+    $product_to_delete->delete();
 
     return $this->send_response([], 'Product deleted successfully.');
   }
@@ -187,13 +187,13 @@ class ProductsController extends ResponseController {
       $file = $request->file('image');
       $path = $file->store('product_images', 'public');
 
-      $productImage = Image::create([
+      $product_image = Image::create([
         'link' => $path,
         'product_id' => $id,
       ]);
-      $productImage->save();
+      $product_image->save();
 
-      return $this->send_response(['image' => $productImage->link], 'Product image uploaded successfully.');
+      return $this->send_response(['image' => $product_image->link], 'Product image uploaded successfully.');
     }
 
     return $this->send_error('No file uploaded.', ['error' => 'No file uploaded.']);

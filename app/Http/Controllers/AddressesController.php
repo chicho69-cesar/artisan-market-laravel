@@ -43,9 +43,9 @@ class AddressesController extends ResponseController {
 
   public function update_address(Request $request, string $id): JsonResponse {
     $body = $request->all();
-    $address = Address::find($id);
+    $address_to_update = Address::find($id);
 
-    if (!$address) {
+    if (!$address_to_update) {
       return $this->send_error('Address not found');
     }
 
@@ -64,16 +64,16 @@ class AddressesController extends ResponseController {
       return $this->send_error('Validation Error', $validator->errors());
     }
 
-    $address->street = $body['street'];
-    $address->no_out = $body['no_out'];
-    $address->no_in = $body['no_in'];
-    $address->zip_code = $body['zip_code'];
-    $address->city = $body['city'];
-    $address->state = $body['state'];
-    $address->country = $body['country'];
-    $address->phone = $body['phone'];
-    $address->save();
+    $address_to_update->street = $body['street'];
+    $address_to_update->no_out = $body['no_out'];
+    $address_to_update->no_in = $body['no_in'];
+    $address_to_update->zip_code = $body['zip_code'];
+    $address_to_update->city = $body['city'];
+    $address_to_update->state = $body['state'];
+    $address_to_update->country = $body['country'];
+    $address_to_update->phone = $body['phone'];
+    $address_to_update->save();
 
-    return $this->send_response($address, 'Address updated successfully.');
+    return $this->send_response($address_to_update, 'Address updated successfully.');
   }
 }

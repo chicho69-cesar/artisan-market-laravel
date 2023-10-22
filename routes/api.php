@@ -97,7 +97,6 @@ Route::post(
   'orders/create-order',
   [OrdersController::class, 'create_order']
 )->middleware('auth:api');
-// TODO: secondary operations of orders
 
 /* ADDRESSES */
 Route::post(

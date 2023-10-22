@@ -12,7 +12,6 @@ class SocialsController extends ResponseController {
     $user = $request->user();
     $body = $request->all();
 
-    // Definir las redes sociales en un array
     $socials = [
       'Facebook' => 'facebook',
       'Twitter' => 'twitter',
@@ -22,20 +21,20 @@ class SocialsController extends ResponseController {
 
     $response = ['socials' => $body];
 
-    foreach ($socials as $socialName => $socialField) {
-      $social = Social::firstOrNew(['name' => $socialName]);
+    foreach ($socials as $social_name => $social_field) {
+      $social = Social::firstOrNew(['name' => $social_name]);
       $social->save();
 
-      $socialId = $social->id;
+      $social_id = $social->id;
 
-      if (isset($body[$socialField])) {
-        $userSocial = UserSocial::firstOrNew([
+      if (isset($body[$social_field])) {
+        $user_social = UserSocial::firstOrNew([
           'user_id' => $user->id,
-          'social_id' => $socialId,
+          'social_id' => $social_id,
         ]);
 
-        $userSocial->link = $body[$socialField];
-        $userSocial->save();
+        $user_social->link = $body[$social_field];
+        $user_social->save();
       }
     }
 

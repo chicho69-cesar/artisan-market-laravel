@@ -55,13 +55,13 @@ class ReviewsController extends ResponseController {
     $body = $request->all();
     $user = $request->user();
 
-    $review = Review::find($id);
+    $review_to_update = Review::find($id);
 
-    if (!$review) {
+    if (!$review_to_update) {
       return $this->send_error('Review not found');
     }
 
-    if ($review->user_id != $user->id) {
+    if ($review_to_update->user_id != $user->id) {
       return $this->send_error('You are not authorized to update this review.');
     }
 
@@ -74,28 +74,28 @@ class ReviewsController extends ResponseController {
       return $this->send_error('Validation Error', $validator->errors());
     }
 
-    $review->rate = $body['rate'];
-    $review->comment = $body['comment'];
-    $review->save();
+    $review_to_update->rate = $body['rate'];
+    $review_to_update->comment = $body['comment'];
+    $review_to_update->save();
 
-    $review->load('user');
+    $review_to_update->load('user');
 
-    return $this->send_response($review, 'Review updated successfully.');
+    return $this->send_response($review_to_update, 'Review updated successfully.');
   }
 
   public function delete_review(Request $request, string $id): JsonResponse {
     $user = $request->user();
-    $review = Review::find($id);
+    $review_to_delete = Review::find($id);
 
-    if (!$review) {
+    if (!$review_to_delete) {
       return $this->send_error('Review not found');
     }
 
-    if ($review->user_id != $user->id) {
+    if ($review_to_delete->user_id != $user->id) {
       return $this->send_error('You are not authorized to delete this review.');
     }
 
-    $review->delete();
+    $review_to_delete->delete();
 
     return $this->send_response([], 'Review deleted successfully.');
   }
