@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AddressesController;
+use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\SocialsController;
@@ -91,10 +93,21 @@ Route::delete(
 
 /* ORDERS */
 // TODO: CRUD of orders
+/* Route::post(
+  'orders/create-order',
+  [OrdersController::class, 'create_order']
+)->middleware('auth:api'); */
 // TODO: secondary operations of orders
 
 /* ADDRESSES */
-// TODO: CRUD of addresses
+Route::post(
+  'addresses/add-address',
+  [AddressesController::class, 'create_address']
+)->middleware('auth:api');
+Route::put(
+  'addresses/update-address/{id}',
+  [AddressesController::class, 'update_address']
+)->middleware('auth:api');
 
 /* SOCIALS */
 Route::post(
