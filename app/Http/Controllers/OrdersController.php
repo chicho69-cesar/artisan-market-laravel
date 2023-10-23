@@ -163,6 +163,10 @@ class OrdersController extends ResponseController {
       return $this->send_error('Order does not belong to user');
     }
 
+    if ($order->status == 'cancelled') {
+      return $this->send_error('Order is already cancelled');
+    }
+
     $order->status = 'paid';
     $order->save();
 
@@ -174,5 +178,30 @@ class OrdersController extends ResponseController {
     return $this->send_response($order, 'Order paid successfully.');
   }
 
-  // cancel order
+  public function cancel_order(Request $request, string $id): JsonResponse {
+    $user = $request->user();
+    $order = Order::find($id);
+
+    if (!$order) {
+      return $this->send_error('Order not found');
+    }
+
+    if ($order->user_id != $user->id) {
+      return $this->send_error('Order does not belong to user');
+    }
+
+    if ($order->status == 'paid') {
+      return $this->send_error('Order is already paid');
+    }
+
+    $order->status = 'cancelled';
+    $order->save();
+
+    $order->load('order_products');
+    $order->load('products');
+    $order->load('address');
+    $order->load('user');
+
+    return $this->send_response($order, 'Order cancelled successfully.');
+  }
 }

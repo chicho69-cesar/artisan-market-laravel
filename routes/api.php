@@ -108,6 +108,10 @@ Route::patch(
   'orders/pay-order/{id}',
   [OrdersController::class, 'pay_order']
 )->middleware('auth:api');
+Route::patch(
+  'orders/cancel-order/{id}',
+  [OrdersController::class, 'cancel_order']
+)->middleware('auth:api');
 Route::get(
   'orders/seller-orders',
   [OrdersController::class, 'get_seller_orders']
