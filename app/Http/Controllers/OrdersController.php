@@ -74,32 +74,60 @@ class OrdersController extends ResponseController {
     return $this->send_response($order, 'Order created successfully.');
   }
 
-  // get an order
+  public function get_order(Request $request, string $id): JsonResponse {
+    $order = Order::find($id);
 
-  // get user orders
+    if (!$order) {
+      return $this->send_error('Order not found');
+    }
 
-  // get seller orders
+    $order->load('order_products');
+    $order->load('products');
+    $order->load('address');
+    $order->load('user');
+
+    return $this->send_response($order, 'Order retrieved successfully.');
+  }
+
+  public function get_user_orders(Request $request): JsonResponse {
+    $user = $request->user();
+
+    $orders = Order::where('user_id', $user->id)->get();
+
+    $orders->load('order_products');
+    $orders->load('products');
+    $orders->load('address');
+    $orders->load('user');
+
+    return $this->send_response($orders, 'Orders retrieved successfully.');
+  }
+
   public function get_seller_orders(Request $request): JsonResponse {
     $user = $request->user();
+    $user->load('role');
+
+    if ($user->role->name != 'seller') {
+      return $this->send_error('User is not a seller');
+    }
 
     $my_products = Product::where('seller_id', $user->id)->get();
     $order_products = OrderProduct::whereIn('product_id', $my_products->pluck('id'))->get();
     $order_ids = $order_products->pluck('order_id')->unique()->toArray();
     $orders = Order::whereIn('id', $order_ids)->with('address', 'order_products.product')->get();
 
-    $filteredOrders = [];
+    $filtered_orders = [];
 
     foreach ($orders as $order) {
       $subtotal = 0;
 
-      foreach ($order->order_products as $orderProduct) {
-        if ($orderProduct->product->seller_id === $user->id) {
-          $productSubtotal = $orderProduct->product->price * $orderProduct->quantity;
-          $subtotal += $productSubtotal;
+      foreach ($order->order_products as $order_product) {
+        if ($order_product->product->seller_id === $user->id) {
+          $product_subtotal = $order_product->product->price * $order_product->quantity;
+          $subtotal += $product_subtotal;
         }
       }
 
-      $filteredOrder = [
+      $filtered_order = [
         'address' => $order->address,
         'order_id' => $order->id,
         'order_status' => $order->status,
@@ -107,23 +135,44 @@ class OrdersController extends ResponseController {
         'subtotal' => $subtotal,
         'tax' => $subtotal * 0.16,
         'total' => $subtotal * 1.16,
-        'products' => $order->order_products->filter(function ($orderProduct) use ($user) {
-          return $orderProduct->product->seller_id === $user->id;
-        })->map(function ($orderProduct) {
+        'products' => $order->order_products->filter(function ($order_product) use ($user) {
+          return $order_product->product->seller_id === $user->id;
+        })->map(function ($order_product) {
           return [
-            'product' => $orderProduct->product,
-            'quantity_sold' => $orderProduct->quantity,
+            'product' => $order_product->product,
+            'quantity_sold' => $order_product->quantity,
           ];
         })->values()->all(),
       ];
 
-      $filteredOrders[] = $filteredOrder;
+      $filtered_orders[] = $filtered_order;
     }
 
-    return $this->send_response($filteredOrders, 'Orders retrieved successfully.');
+    return $this->send_response($filtered_orders, 'Orders retrieved successfully.');
   }
 
-  // pay order
+  public function pay_order(Request $request, string $id): JsonResponse {
+    $user = $request->user();
+    $order = Order::find($id);
+
+    if (!$order) {
+      return $this->send_error('Order not found');
+    }
+
+    if ($order->user_id != $user->id) {
+      return $this->send_error('Order does not belong to user');
+    }
+
+    $order->status = 'paid';
+    $order->save();
+
+    $order->load('order_products');
+    $order->load('products');
+    $order->load('address');
+    $order->load('user');
+
+    return $this->send_response($order, 'Order paid successfully.');
+  }
 
   // cancel order
 }

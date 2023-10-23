@@ -97,6 +97,18 @@ Route::post(
   [OrdersController::class, 'create_order']
 )->middleware('auth:api');
 Route::get(
+  'orders/get-order/{id}',
+  [OrdersController::class, 'get_order']
+)->middleware('auth:api');
+Route::get(
+  'orders/user-orders',
+  [OrdersController::class, 'get_user_orders']
+)->middleware('auth:api');
+Route::patch(
+  'orders/pay-order/{id}',
+  [OrdersController::class, 'pay_order']
+)->middleware('auth:api');
+Route::get(
   'orders/seller-orders',
   [OrdersController::class, 'get_seller_orders']
 )->middleware('auth:api');
