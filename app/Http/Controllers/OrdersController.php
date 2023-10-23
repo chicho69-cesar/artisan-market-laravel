@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends ResponseController {
@@ -77,6 +79,49 @@ class OrdersController extends ResponseController {
   // get user orders
 
   // get seller orders
+  public function get_seller_orders(Request $request): JsonResponse {
+    $user = $request->user();
+
+    $my_products = Product::where('seller_id', $user->id)->get();
+    $order_products = OrderProduct::whereIn('product_id', $my_products->pluck('id'))->get();
+    $order_ids = $order_products->pluck('order_id')->unique()->toArray();
+    $orders = Order::whereIn('id', $order_ids)->with('address', 'order_products.product')->get();
+
+    $filteredOrders = [];
+
+    foreach ($orders as $order) {
+      $subtotal = 0;
+
+      foreach ($order->order_products as $orderProduct) {
+        if ($orderProduct->product->seller_id === $user->id) {
+          $productSubtotal = $orderProduct->product->price * $orderProduct->quantity;
+          $subtotal += $productSubtotal;
+        }
+      }
+
+      $filteredOrder = [
+        'address' => $order->address,
+        'order_id' => $order->id,
+        'order_status' => $order->status,
+        'order_date' => $order->date,
+        'subtotal' => $subtotal,
+        'tax' => $subtotal * 0.16,
+        'total' => $subtotal * 1.16,
+        'products' => $order->order_products->filter(function ($orderProduct) use ($user) {
+          return $orderProduct->product->seller_id === $user->id;
+        })->map(function ($orderProduct) {
+          return [
+            'product' => $orderProduct->product,
+            'quantity_sold' => $orderProduct->quantity,
+          ];
+        })->values()->all(),
+      ];
+
+      $filteredOrders[] = $filteredOrder;
+    }
+
+    return $this->send_response($filteredOrders, 'Orders retrieved successfully.');
+  }
 
   // pay order
 

@@ -96,6 +96,10 @@ Route::post(
   'orders/create-order',
   [OrdersController::class, 'create_order']
 )->middleware('auth:api');
+Route::get(
+  'orders/seller-orders',
+  [OrdersController::class, 'get_seller_orders']
+)->middleware('auth:api');
 
 /* ADDRESSES */
 Route::post(
