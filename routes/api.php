@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressesController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ReviewsController;
@@ -91,7 +92,6 @@ Route::delete(
 )->middleware('auth:api');
 
 /* ORDERS */
-// TODO: CRUD of orders
 Route::post(
   'orders/create-order',
   [OrdersController::class, 'create_order']
@@ -150,4 +150,7 @@ Route::delete(
 )->middleware('auth:api');
 
 /* DASHBOARD */
-// TODO: An endpoint for get the information for the dashboard
+Route::get(
+  'dashboard/stats',
+  [DashboardController::class, 'get_dashboard_stats']
+)->middleware('auth:api');
