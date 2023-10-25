@@ -61,6 +61,18 @@ php artisan key:generate
 php artisan migrate
 ```
 
+**Ejecuta el seed de los datos para rellenar la base de datos:**
+
+```bash
+php artisan db:seed
+```
+
+**Crear tu Personal Access Client key para Passport:**
+
+```bash
+php artisan passport:client --personal
+```
+
 **Inicia el servidor de desarrollo:**
 
 ```bash
