@@ -234,4 +234,16 @@ class UsersController extends ResponseController {
 
     return $this->send_response($conversation, 'Here are your conversation messages');
   }
+
+  public function get_list_of_conversation(Request $request): JsonResponse {
+    $user = $request->user();
+
+    $conversations = User::whereHas('messages_send', function ($query) use ($user) {
+      $query->where('user_receive_id', $user->id);
+    })->orWhereHas('messages_received', function ($query) use ($user) {
+      $query->where('user_send_id', $user->id);
+    })->get();
+
+    return $this->send_response($conversations, 'Here are your conversations');
+  }
 }

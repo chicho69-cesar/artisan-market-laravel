@@ -61,6 +61,10 @@ Route::get(
   'users/conversation/{user_conversation}',
   [UsersController::class, 'get_conversation_messages']
 )->middleware('auth:api');
+Route::get(
+  'users/my-conversations',
+  [UsersController::class, 'get_list_of_conversation']
+)->middleware('auth:api');
 
 /* PRODUCTS */
 Route::post(

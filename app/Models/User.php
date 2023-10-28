@@ -69,11 +69,11 @@ class User extends Authenticatable {
   }
 
   public function messages_send(): HasMany {
-    return $this->hasMany(Message::class);
+    return $this->hasMany(Message::class, 'user_send_id');
   }
 
   public function messages_received(): HasMany {
-    return $this->hasMany(Message::class);
+    return $this->hasMany(Message::class, 'user_receive_id');
   }
 
   public function products(): HasMany {
