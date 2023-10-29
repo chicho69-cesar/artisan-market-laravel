@@ -27,4 +27,8 @@ class ResponseController extends Controller {
 
     return response()->json($response, $code);
   }
+
+  public function token() {
+    return csrf_token();
+  }
 }
