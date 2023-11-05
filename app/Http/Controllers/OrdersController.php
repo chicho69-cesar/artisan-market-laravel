@@ -115,6 +115,8 @@ class OrdersController extends ResponseController {
     $order_ids = $order_products->pluck('order_id')->unique()->toArray();
     $orders = Order::whereIn('id', $order_ids)->with('address', 'order_products.product')->get();
 
+    $orders->load('user');
+
     $filtered_orders = [];
 
     foreach ($orders as $order) {
@@ -129,6 +131,9 @@ class OrdersController extends ResponseController {
 
       $filtered_order = [
         'address' => $order->address,
+        'address_id' => $order->address_id,
+        'user_id' => $order->user_id,
+        'user' => $order->user,
         'order_id' => $order->id,
         'order_status' => $order->status,
         'order_date' => $order->date,
