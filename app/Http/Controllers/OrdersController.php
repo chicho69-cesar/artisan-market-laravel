@@ -132,14 +132,14 @@ class OrdersController extends ResponseController {
       $filtered_order = [
         'address' => $order->address,
         'address_id' => $order->address_id,
-        'user_id' => $order->user_id,
-        'user' => $order->user,
-        'order_id' => $order->id,
-        'order_status' => $order->status,
-        'order_date' => $order->date,
+        'date' => $order->date,
+        'id' => $order->id,
+        'status' => $order->status,
         'subtotal' => $subtotal,
         'tax' => $subtotal * 0.16,
         'total' => $subtotal * 1.16,
+        'user_id' => $order->user_id,
+        'user' => $order->user,
         'products' => $order->order_products->filter(function ($order_product) use ($user) {
           return $order_product->product->seller_id === $user->id;
         })->map(function ($order_product) {
