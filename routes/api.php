@@ -136,6 +136,10 @@ Route::post(
   'socials/add-social',
   [SocialsController::class, 'store']
 )->middleware('auth:api');
+Route::get(
+  'socials/get-socials/{id}',
+  [SocialsController::class, 'index']
+)->middleware('auth:api');
 
 /* REVIEWS */
 Route::post(

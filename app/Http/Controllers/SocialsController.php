@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Social;
+use App\Models\User;
 use App\Models\UserSocial;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -39,5 +40,33 @@ class SocialsController extends ResponseController {
     }
 
     return $this->send_response($response, 'User socials links added successfully.');
+  }
+
+  public function index(Request $request, $id): JsonResponse {
+    $user = User::find($id);
+
+    if (!$user) {
+      return $this->send_error('User not found');
+    }
+
+    $socials = Social::all()->pluck('name', 'id');
+    $result = [];
+
+    foreach ($socials as $socialId => $socialName) {
+      $link = $user->socials()
+        ->where('social_id', $socialId)
+        ->value('link');
+
+      $result[$socialName] = $link ?? null;
+    }
+
+    $response = [
+      'facebook' => $result['Facebook'],
+      'twitter' => $result['Twitter'],
+      'linkedin' => $result['Linkedin'],
+      'freeMarket' => $result['Mercado libre'],
+    ];
+
+    return $this->send_response(['socials' => $response], 'User socials links of the.');
   }
 }
