@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\UsersController;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 /* USERS */
+
 Route::post('users/sign-up', [UsersController::class, 'register']);
 Route::post('users/sign-in', [UsersController::class, 'login']);
 Route::post(
@@ -162,3 +164,5 @@ Route::get(
   'dashboard/stats',
   [DashboardController::class, 'get_dashboard_stats']
 )->middleware('auth:api');
+
+Route::get('/token', [ResponseController::class, 'token']);
