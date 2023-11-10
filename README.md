@@ -80,3 +80,11 @@ php artisan serve
 ```
 
 Accede a la aplicación en tu navegador visitando <http://localhost:8000>
+
+**Inicia el servidor para acceder dentro de una LAN:**
+
+```bash
+php artisan serve --host 192.168.100.14 --port="8000"
+```
+
+Accede a la aplicación desde otro dispositivo conectado a la misma red visitando <http://192.168.100.14:8000>
