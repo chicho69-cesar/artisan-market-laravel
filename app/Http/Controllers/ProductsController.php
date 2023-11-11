@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -91,8 +92,13 @@ class ProductsController extends ResponseController {
     return $this->send_response($products, 'Products retrieved successfully.');
   }
 
-  public function get_seller_products(Request $request): JsonResponse {
-    $user = $request->user();
+  public function get_seller_products(Request $request, string $id): JsonResponse {
+    $user = User::find($id);
+
+    if (!$user) {
+      return $this->send_error('User not found.', ['error' => 'User not found.']);
+    }
+
     $products = Product::where('seller_id', $user->id)->paginate(20);
 
     $products->load('seller');
@@ -200,7 +206,8 @@ class ProductsController extends ResponseController {
   }
 
   public function delete_image(string $id): JsonResponse {
-    $image = Image::find($id);
+    $link = 'product_images/' . $id;
+    $image = Image::where('link', $link)->first();
 
     if (!$image) {
       return $this->send_error('Image not found.', ['error' => 'Image not found.']);

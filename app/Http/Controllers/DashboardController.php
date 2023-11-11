@@ -51,15 +51,15 @@ class DashboardController extends ResponseController {
           break;
       }
 
-      // Obtener el número de reviews para los productos de este vendedor
-      $total_reviews += Review::whereIn('product_id', $my_products->pluck('id'))->count();
-
       $filtered_order = [
         'order_id' => $order->id,
       ];
 
       $filtered_orders[] = $filtered_order;
     }
+
+    // Obtener el número de reviews para los productos de este vendedor
+    $total_reviews += Review::whereIn('product_id', $my_products->pluck('id'))->count();
 
     // Crear un array con las estadísticas
     $stats = [

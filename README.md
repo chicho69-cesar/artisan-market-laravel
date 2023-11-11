@@ -88,3 +88,11 @@ php artisan serve --host 192.168.100.14 --port="8000"
 ```
 
 Accede a la aplicación desde otro dispositivo conectado a la misma red visitando <http://192.168.100.14:8000>
+
+**Crea un enlace simbólico al almacenamiento de las imágenes:**
+
+```bash
+php artisan storage:link
+```
+
+Ahora se puede acceder a las imágenes usando la ruta de la imagen concatenada al enlace: <http://localhost:8000/storage/{path de la imagen}>

@@ -184,16 +184,26 @@ class UsersController extends ResponseController {
     return $this->send_response($follow, 'User unfollowed successfully.');
   }
 
-  public function get_followers(Request $request): JsonResponse {
-    $user = $request->user();
+  public function get_followers(Request $request, string $id): JsonResponse {
+    $user = User::find($id);
+
+    if (!$user) {
+      return $this->send_error('User not found.', ['error' => 'User not found.']);
+    }
+
     $followers = Follower::where('following_id', $user->id)->pluck('follower_id');
     $follower_users = User::whereIn('id', $followers)->get();
 
     return $this->send_response($follower_users, 'Here are your followers');
   }
 
-  public function get_followings(Request $request): JsonResponse {
-    $user = $request->user();
+  public function get_followings(Request $request, string $id): JsonResponse {
+    $user = User::find($id);
+
+    if (!$user) {
+      return $this->send_error('User not found.', ['error' => 'User not found.']);
+    }
+
     $followings = Follower::where('follower_id', $user->id)->pluck('following_id');
     $following_users = User::whereIn('id', $followings)->get();
 

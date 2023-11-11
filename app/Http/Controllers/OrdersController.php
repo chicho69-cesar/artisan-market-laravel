@@ -66,10 +66,14 @@ class OrdersController extends ResponseController {
       $order_product->save();
     }
 
-    $order->load('order_products');
-    $order->load('products');
-    $order->load('address');
-    $order->load('user');
+    $order->load([
+      'order_products',
+      'products' => function ($query) {
+        $query->with(['images', 'seller', 'categories']);
+      },
+      'address',
+      'user'
+    ]);
 
     return $this->send_response($order, 'Order created successfully.');
   }
@@ -81,10 +85,14 @@ class OrdersController extends ResponseController {
       return $this->send_error('Order not found');
     }
 
-    $order->load('order_products');
-    $order->load('products');
-    $order->load('address');
-    $order->load('user');
+    $order->load([
+      'order_products',
+      'products' => function ($query) {
+        $query->with(['images', 'seller', 'categories']);
+      },
+      'address',
+      'user'
+    ]);
 
     return $this->send_response($order, 'Order retrieved successfully.');
   }
@@ -94,10 +102,14 @@ class OrdersController extends ResponseController {
 
     $orders = Order::where('user_id', $user->id)->get();
 
-    $orders->load('order_products');
-    $orders->load('products');
-    $orders->load('address');
-    $orders->load('user');
+    $orders->load([
+      'order_products',
+      'products' => function ($query) {
+        $query->with(['images', 'seller', 'categories']);
+      },
+      'address',
+      'user'
+    ]);
 
     return $this->send_response($orders, 'Orders retrieved successfully.');
   }
@@ -113,7 +125,7 @@ class OrdersController extends ResponseController {
     $my_products = Product::where('seller_id', $user->id)->get();
     $order_products = OrderProduct::whereIn('product_id', $my_products->pluck('id'))->get();
     $order_ids = $order_products->pluck('order_id')->unique()->toArray();
-    $orders = Order::whereIn('id', $order_ids)->with('address', 'order_products.product')->get();
+    $orders = Order::whereIn('id', $order_ids)->with('address', 'order_products.product.images')->get();
 
     $orders->load('user');
 

@@ -43,11 +43,11 @@ Route::patch(
   [UsersController::class, 'unfollow_user']
 )->middleware('auth:api');
 Route::get(
-  'users/followers',
+  'users/followers/{id}',
   [UsersController::class, 'get_followers']
 )->middleware('auth:api');
 Route::get(
-  'users/followings',
+  'users/followings/{id}',
   [UsersController::class, 'get_followings']
 )->middleware('auth:api');
 Route::post(
@@ -77,7 +77,7 @@ Route::get('products/get-product/{id}', [ProductsController::class, 'get_product
 Route::get('products/get-products', [ProductsController::class, 'get_products']);
 Route::get('products/search-products', [ProductsController::class, 'search_products']);
 Route::get(
-  'products/seller-products',
+  'products/seller-products/{id}',
   [ProductsController::class, 'get_seller_products']
 )->middleware('auth:api');
 Route::put(
