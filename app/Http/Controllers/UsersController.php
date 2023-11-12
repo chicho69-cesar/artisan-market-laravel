@@ -87,16 +87,7 @@ class UsersController extends ResponseController {
       return $this->send_error('User not found.', ['error' => 'User not found.']);
     }
 
-    return $this->send_response(
-      [
-        'id' => $user->id,
-        'name' => $user->name,
-        'lastname' => $user->lastname,
-        'picture' => $user->picture,
-        'email' => $user->email,
-      ],
-      'User info retrieved successfully.'
-    );
+    return $this->send_response($user, 'User info retrieved successfully.');
   }
 
   public function edit_profile(Request $request): JsonResponse {
