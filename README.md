@@ -67,6 +67,12 @@ php artisan migrate
 php artisan db:seed
 ```
 
+**Instalar Passport para el proyecto:**
+
+```bash
+php artisan passport:install
+```
+
 **Crear tu Personal Access Client key para Passport:**
 
 ```bash
