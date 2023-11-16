@@ -75,6 +75,7 @@ Route::post(
 )->middleware('auth:api');
 Route::get('products/get-product/{id}', [ProductsController::class, 'get_product']);
 Route::get('products/get-products', [ProductsController::class, 'get_products']);
+Route::get('products/get-featured-products', [ProductsController::class, 'get_featured_products']);
 Route::get('products/search-products', [ProductsController::class, 'search_products']);
 Route::get(
   'products/seller-products/{id}',

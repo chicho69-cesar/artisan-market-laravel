@@ -71,7 +71,17 @@ class ProductsController extends ResponseController {
   }
 
   public function get_products(Request $request): JsonResponse {
-    $products = Product::paginate(10);
+    $products = Product::paginate(25);
+
+    $products->load('seller');
+    $products->load('images');
+    $products->load('categories');
+
+    return $this->send_response($products, 'Products retrieved successfully.');
+  }
+
+  public function get_featured_products(Request $request): JsonResponse {
+    $products = Product::orderBy('created_at', 'desc')->take(8)->get();
 
     $products->load('seller');
     $products->load('images');
@@ -83,7 +93,7 @@ class ProductsController extends ResponseController {
   public function search_products(Request $request): JsonResponse {
     $products = Product::where('name', 'like', '%' . $request->query('q') . '%')
       ->orWhere('description', 'like', '%' . $request->query('q') . '%')
-      ->paginate(20);
+      ->paginate(25);
 
     $products->load('seller');
     $products->load('images');
@@ -99,7 +109,7 @@ class ProductsController extends ResponseController {
       return $this->send_error('User not found.', ['error' => 'User not found.']);
     }
 
-    $products = Product::where('seller_id', $user->id)->paginate(20);
+    $products = Product::where('seller_id', $user->id)->paginate(25);
 
     $products->load('seller');
     $products->load('images');
