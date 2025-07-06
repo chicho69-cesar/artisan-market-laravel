@@ -1,6 +1,8 @@
 # Artisan Market Back-End with Laravel
 
-![logo](assets/logo.png)
+<div style="width: 100%; display: flex; justify-content: center; margin-block: 1rem;">
+  <img src="./assets/logo.png" width="100" height="100" />
+</div>
 
 **Artisan Market Back-End** es un proyecto desarrollado con Laravel, diseñado para impulsar una tienda en línea especializada en la venta de productos artesanales. Este repositorio alberga el código fuente del backend de la aplicación, proporcionando las capacidades esenciales para gestionar productos, usuarios, órdenes y más en la plataforma.
 
