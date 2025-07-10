@@ -1,0 +1,11 @@
+Dockerfile
+docker-compose.yml
+docker-compose.prod.yml
+docker-compose.dev.yml
+docker-compose.stage.yml
+
+.git
+artisan_data/
+vendor/
+public/storage/
+node_modules/

@@ -1,0 +1,19 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: artisan_market_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: artisan_market
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./artisan_data:/var/lib/mysql
+    networks:
+      - artisan_market_network
+
+networks:
+  artisan_market_network:
+    driver: bridge

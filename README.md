@@ -104,3 +104,71 @@ php artisan storage:link
 ```
 
 Ahora se puede acceder a las imágenes usando la ruta de la imagen concatenada al enlace: <http://localhost:8000/storage/{path de la imagen}>
+
+## Ejecutar proyecto con Docker
+
+Para ejecutar el proyecto utilizando Docker, asegúrate de tener Docker y Docker Compose instalados en tu máquina. Luego, sigue estos pasos:
+
+**Levantar el docker compose haciendo build:**
+
+```bash
+docker-compose -f docker-compose.dev.yml up -d --build
+```
+
+Esto iniciará los contenedores necesarios para la aplicación, incluyendo el servidor web y la base de datos.
+
+**Ejecutar comandos en la consola interactiva:**
+
+Para ejecutar comandos de Artisan o Composer dentro del contenedor de la aplicación, puedes usar el siguiente comando:
+
+```bash
+docker exec -it artisan_market_app bash
+
+php artisan migrate --seed
+php artisan passport:install
+php artisan passport:client --personal
+php artisan storage:link
+```
+
+**Acceder a la aplicación:**
+
+Abre tu navegador y visita <http://localhost:8000> para acceder a la aplicación.
+
+## Docker creando la imagen
+
+Para crear la imagen del proyecto y ejecutarla sin la necesidad de usar Docker Compose, puedes seguir estos pasos:
+
+**Levantar base de datos:**
+
+```bash
+docker compose up -d
+```
+
+**Construir la imagen:**
+
+```bash
+docker build -t artisan_market_app:1.0.0 .
+```
+
+**Ejecutar la imagen:**
+
+```bash
+docker container run -dp 8000:80 `
+> --name artisan_market_app `
+> --network artisan-market-laravel_artisan_market_network `
+> --env-file .env.local `
+> artisan_market_app:1.0.0
+```
+
+**Ejecutar comandos en la consola interactiva:**
+
+Para ejecutar comandos de Artisan o Composer dentro del contenedor de la aplicación, puedes usar el siguiente comando:
+
+```bash
+docker exec -it artisan_market_app bash
+
+php artisan migrate --seed
+php artisan passport:install
+php artisan passport:client --personal
+php artisan storage:link
+```
