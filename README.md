@@ -103,7 +103,7 @@ Accede a la aplicación desde otro dispositivo conectado a la misma red visitand
 php artisan storage:link
 ```
 
-Ahora se puede acceder a las imágenes usando la ruta de la imagen concatenada al enlace: <http://localhost:8000/storage/{path de la imagen}>
+Ahora se puede acceder a las imágenes usando la ruta de la imagen concatenada al enlace: <<http://localhost:8000/storage/{path> de la imagen}>
 
 ## Ejecutar proyecto con Docker
 
@@ -156,7 +156,7 @@ docker build -t artisan_market_app:1.0.0 .
 docker container run -dp 8000:80 `
 > --name artisan_market_app `
 > --network artisan-market-laravel_artisan_market_network `
-> --env-file .env.local `
+> --env-file .env.template `
 > artisan_market_app:1.0.0
 ```
 
@@ -171,4 +171,11 @@ php artisan migrate --seed
 php artisan passport:install
 php artisan passport:client --personal
 php artisan storage:link
+```
+
+Si el comando `php artisan storage:link` falla, porque el link ya existe, puedes eliminarlo con:
+
+```bash
+rm -rf public/storage # En MacOS o Linux
+Remove-Item public\storage -Recurse -Force # En Windows PowerShell
 ```
